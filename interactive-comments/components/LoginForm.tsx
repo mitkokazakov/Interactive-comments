@@ -11,6 +11,7 @@ import {
 import { GoInfo } from "react-icons/go";
 
 import { registerUser } from "@/actions/registerAction";
+import { signIn } from "next-auth/react";
 
 const LoginForm = ({ formtype }: { formtype: string }) => {
 
@@ -25,16 +26,27 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
     resolver: zodResolver(loginRegisterScheme),
   });
 
-  const onLogIn = async (data: LoginRegisterScheme) => {
-    console.log(data.email);
-    console.log(data.password);
-  };
 
   const handleSubmitForm = async (data: LoginRegisterScheme) => {
     if (formtype == "login") {
       console.log("This is login func");
       console.log(data.email);
       console.log(data.password);
+
+      const res = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+        callbackUrl: "/"
+      })
+
+      if(res?.error){
+        alert(res.error)
+      }
+
+      if(res?.ok){
+        alert("Login success")
+      }
     }
 
     if (formtype == "register") {
@@ -59,7 +71,7 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
   return (
     <div className="flex flex-col w-full mt-8">
       <form
-        method="POST"
+        
         onSubmit={handleSubmit(handleSubmitForm)}
         className="flex flex-col w-full"
       >

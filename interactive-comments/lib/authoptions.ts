@@ -19,46 +19,34 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const user = {
-          id: "test-id-123",
-          name: "Mock User",
-          email: "testmail@yahoo.com",
-          emailVerified: null,
-          image: null,
-        };
-
-        if (user) {
-          return user;
-        } else {
-          return null;
+        
+        //Check if there is am email and password
+        if (!credentials?.email || !credentials.password) {
+          throw new Error("Missing email or password!");
         }
-        // //Check if there is am email and password
-        // if (!credentials?.email || !credentials.password) {
-        //   throw new Error("Missing email or password!");
-        // }
 
-        // //Check if there is user with provided email
-        // const user = await prisma.user.findUnique({
-        //   where: {
-        //     email: credentials.email,
-        //   },
-        // });
+        //Check if there is user with provided email
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
 
-        // if (!user || !user?.hashedPassword || user?.isDeleted) {
-        //   throw new Error("There is now user with this email.Sorry!");
-        // }
+        if (!user || !user?.hashedPassword ) {
+          throw new Error("There is now user with this email.Sorry!");
+        }
 
-        // //Check if the passwords matched
-        // const matchedPasswords = await bcrypt.compare(
-        //   credentials.password,
-        //   user.hashedPassword
-        // );
+        //Check if the passwords matched
+        const matchedPasswords = await bcrypt.compare(
+          credentials.password,
+          user.hashedPassword
+        );
 
-        // if (!matchedPasswords) {
-        //   throw new Error("Incorect password!");
-        // }
+        if (!matchedPasswords) {
+          throw new Error("Incorect password!");
+        }
 
-        // return user;
+        return user;
       },
     }),
   ],
