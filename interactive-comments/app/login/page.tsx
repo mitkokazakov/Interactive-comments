@@ -13,7 +13,7 @@ const page = () => {
           <h1 className='text-xl font-bold'>Welcome to Interactive comments</h1>
           <p className='mt-3 text-sm'>Please log in to continue</p>
 
-          <LoginForm />
+          <LoginForm formtype='login'/>
       </div>
     </div>
   )
