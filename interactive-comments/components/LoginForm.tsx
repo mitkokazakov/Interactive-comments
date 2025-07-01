@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import React from "react";
+import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -10,7 +10,13 @@ import {
 
 import { GoInfo } from "react-icons/go";
 
+import { registerUser } from "@/actions/registerAction";
+
 const LoginForm = ({ formtype }: { formtype: string }) => {
+
+    const [isPending, startTransition] = useTransition();
+
+    
   const {
     register,
     handleSubmit,
@@ -35,6 +41,18 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
       console.log("This is register func");
       console.log(data.email);
       console.log(data.password);
+
+      startTransition(async () => {
+        const res = await registerUser(data);
+
+        if(res.error){
+            alert(res.error)
+        }
+
+        if(res.success){
+            alert(res.success)
+        }
+      })
     }
   };
 
