@@ -1,9 +1,9 @@
-
 import { AuthOptions } from "next-auth";
 import prisma from "./prismadb";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { log } from "console";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -19,7 +19,6 @@ export const authOptions: AuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        
         //Check if there is am email and password
         if (!credentials?.email || !credentials.password) {
           throw new Error("Missing email or password!");
@@ -32,7 +31,7 @@ export const authOptions: AuthOptions = {
           },
         });
 
-        if (!user || !user?.hashedPassword ) {
+        if (!user || !user?.hashedPassword) {
           throw new Error("There is now user with this email.Sorry!");
         }
 
@@ -50,20 +49,21 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
-  // callbacks: {
-  //   async jwt({ token, user, session }) {
-  //     console.log("JWT Callback", { token, user, session });
+  callbacks: {
+    async jwt({ token, user }) {
+      console.log("JWT Callback", { token, user });
+      return { ...token, ...user };
+    },
 
-  //     return { ...token, ...user };
-  //   },
+    async session({ session, token }) {
+      session.user.id = token.id;
 
-  // //   async session({ session, token }) {
-  // //     session.user.id = token.id;
-  // //     session.user.role = token.role;
+      console.log("Session", session);
+      
 
-  // //     return session;
-  // //   },
-  // },
+      return session;
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
