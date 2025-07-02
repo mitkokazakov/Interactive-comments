@@ -110,7 +110,7 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
         </div>
 
         <button className="bg-blue-600 text-white py-3 mt-5 rounded-lg">
-          {formtype == 'login' ? 'Login' : 'Sign Up'}
+          {formtype == 'login' ? 'Login' : 'Sign Up'} 
         </button>
 
         <div className="flex justify-center items-center gap-2 py-3 border-t-[1px] border-t-slate-200 mt-5">
