@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/authoptions";
 
 import Comment from "@/components/Comment";
 import CommentWrapper from "@/components/CommentWrapper";
+import AddComment from "@/components/AddComment";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -14,6 +15,8 @@ export default async function Home() {
         {/* <Comment/> */}
 
         <CommentWrapper/>
+
+        <AddComment/>
       </div>
     </div>
   );
