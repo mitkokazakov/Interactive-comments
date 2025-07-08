@@ -4,8 +4,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CreateReply } from "@/actions/postReply";
 import { FindUser } from "@/lib/services";
+import { DateTime } from "next-auth/providers/kakao";
 
-const Comment = ({parentId}: { parentId: string}) => {
+const Comment = ({parentId, id, username, content}: { parentId: string, id: string, username: string, content: string}) => {
   const [replyClicked, setReply] = useState(false);
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
@@ -15,6 +16,7 @@ const Comment = ({parentId}: { parentId: string}) => {
 
   //const currentUser = await FindUser(userId)
 
+
   function Reply() {
     setReply(true);
   }
@@ -23,6 +25,9 @@ const Comment = ({parentId}: { parentId: string}) => {
     const content = replyBoxRef.current?.querySelector("textarea")?.value || "";
 
     if (!content.trim()) return;
+
+    console.log(userId);
+    
 
     await CreateReply(userId, parentId, content);
 
@@ -72,9 +77,7 @@ const Comment = ({parentId}: { parentId: string}) => {
 
         <div>
           <p className="text-slate-600">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolore id,
-            atque accusamus sit debitis repellendus minima voluptates nostrum
-            tempora sequi.
+            {content}
           </p>
         </div>
 

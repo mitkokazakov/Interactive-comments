@@ -5,11 +5,12 @@ import { revalidatePath } from "next/cache"
 
 export async function CreateReply(userId: string, commentId: string, content: string) {
     
-    const reply = await prisma.reply.create({
+    const reply = await prisma.comment.create({
         data:{
         content: content,
-        commentId: commentId,
-        userId: userId
+        parentId: commentId,
+        userId: userId,
+        isReply: true
     }
     })
 
