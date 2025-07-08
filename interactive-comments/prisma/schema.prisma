@@ -22,6 +22,8 @@ model User {
   hashedPassword String
   accounts       Account[]
   sessions       Session[]
+  comments       Comment[]
+  replies        Reply[]
 }
 
 model Account {
@@ -58,4 +60,34 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Comment {
+  id        String    @id @default(cuid())
+  content   String
+  createdAt DateTime  @default(now())
+  isDeleted Boolean   @default(false)
+  likes     Int       @default(0)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies   Reply[]
+
+  @@index([createdAt])
+  @@index([userId])
+}
+
+model Reply {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  isDeleted Boolean  @default(false)
+  likes     Int      @default(0)
+  commentId String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([userId])
+  @@index([commentId])
 }

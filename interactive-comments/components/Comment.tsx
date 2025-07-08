@@ -29,7 +29,7 @@ const Comment = () => {
     return () => {
       document.removeEventListener("click", handleClickOutside);
     };
-  },[replyClicked]);
+  }, [replyClicked]);
 
   return (
     <div className="w-full flex flex-col">
@@ -84,32 +84,34 @@ const Comment = () => {
       </div>
 
       <div
-      ref={replyBoxRef}
+        ref={replyBoxRef}
         className={
           replyClicked == true
             ? "w-full flex flex-col gap-5 bg-white rounded-lg p-4 mt-3"
             : "hidden"
         }
       >
-        <textarea
-          className="rounded-lg border-[1px] border-slate-200 outline-slate-400"
-          name="answer"
-          id="answer"
-          rows={4}
-        ></textarea>
+        <form action="" className="w-full">
+          <textarea
+            className="rounded-lg border-[1px] border-slate-200 outline-slate-400 w-full"
+            name="answer"
+            id="answer"
+            rows={4}
+          ></textarea>
 
-        <div className="w-full flex justify-between items-center">
-          <Image
-            src={"/images/random.png"}
-            width={32}
-            height={32}
-            alt="Cover"
-          ></Image>
+          <div className="w-full flex justify-between items-center">
+            <Image
+              src={"/images/random.png"}
+              width={32}
+              height={32}
+              alt="Cover"
+            ></Image>
 
-          <button className="text-white bg-violet-500 font-bold text-lg px-6 py-2 rounded-lg">
-            REPLY
-          </button>
-        </div>
+            <button className="text-white bg-violet-500 font-bold text-lg px-6 py-2 rounded-lg">
+              REPLY
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
