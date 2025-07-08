@@ -1,13 +1,34 @@
 "use client";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+import { useSession } from "next-auth/react";
+import { CreateReply } from "@/actions/postReply";
+import { FindUser } from "@/lib/services";
 
-const Comment = () => {
+const Comment = ({parentId}: { parentId: string}) => {
   const [replyClicked, setReply] = useState(false);
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
+  const { data: session, status } = useSession();
+
+  const userId = session?.user?.id as string
+
+  //const currentUser = await FindUser(userId)
+
   function Reply() {
     setReply(true);
+  }
+
+  async function PostReply() {
+    const content = replyBoxRef.current?.querySelector("textarea")?.value || "";
+
+    if (!content.trim()) return;
+
+    await CreateReply(userId, parentId, content);
+
+    setReply(false);
+
+    alert("Posted")
   }
 
   useEffect(() => {
@@ -91,7 +112,13 @@ const Comment = () => {
             : "hidden"
         }
       >
-        <form action="" className="w-full">
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            await PostReply();
+          }}
+          className="w-full"
+        >
           <textarea
             className="rounded-lg border-[1px] border-slate-200 outline-slate-400 w-full"
             name="answer"
@@ -107,7 +134,10 @@ const Comment = () => {
               alt="Cover"
             ></Image>
 
-            <button className="text-white bg-violet-500 font-bold text-lg px-6 py-2 rounded-lg">
+            <button
+              type="submit"
+              className="text-white bg-violet-500 font-bold text-lg px-6 py-2 rounded-lg"
+            >
               REPLY
             </button>
           </div>
