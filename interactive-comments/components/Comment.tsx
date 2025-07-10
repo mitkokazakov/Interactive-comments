@@ -6,19 +6,37 @@ import { CreateReply } from "@/actions/postReply";
 import { FindUser } from "@/lib/services";
 import { DateTime } from "next-auth/providers/kakao";
 
-const Comment = ({parentId, id, username, content}: { parentId: string, id: string, username: string, content: string}) => {
+const Comment = ({
+  parentId,
+  id,
+  username,
+  content,
+  currentUserId
+}: {
+  parentId: string;
+  id: string;
+  username: string;
+  content: string;
+  currentUserId: string
+}) => {
   const [replyClicked, setReply] = useState(false);
+  const [editClicked, setEdit] = useState(false);
+  const [onEditChange, setOnEditChange] = useState(content)
+
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
   const { data: session, status } = useSession();
 
-  const userId = session?.user?.id as string
+  const userId = session?.user?.id as string;
 
   //const currentUser = await FindUser(userId)
 
-
   function Reply() {
     setReply(true);
+  }
+
+  function Edit(){
+    setEdit(true);
   }
 
   async function PostReply() {
@@ -27,13 +45,12 @@ const Comment = ({parentId, id, username, content}: { parentId: string, id: stri
     if (!content.trim()) return;
 
     console.log(userId);
-    
 
     await CreateReply(userId, parentId, content);
 
     setReply(false);
 
-    alert("Posted")
+    alert("Posted");
   }
 
   useEffect(() => {
@@ -76,9 +93,17 @@ const Comment = ({parentId, id, username, content}: { parentId: string, id: stri
         </div>
 
         <div>
-          <p className="text-slate-600">
-            {content}
-          </p>
+          <p className={editClicked == true ? 'hidden' : "text-slate-600"}>{content}</p>
+
+          <div className={editClicked == true ? "" : "hidden"}>
+
+            <form action="" className="flex flex-col justify-center items-end gap-3 w-full">
+              <textarea name="edit" id="edit" cols={4} value={onEditChange} onChange={e => {setOnEditChange(e.target.value)}} className="w-full rounded-lg border-[1px] border-slate-200 outline-slate-400 px-3 py-2"></textarea>
+
+              <button className="bg-violet-500 text-white font-bold text-lg px-6 py-2 rounded-lg text-right">UPDATE</button>
+            </form>
+
+          </div>
         </div>
 
         <div className="flex justify-between items-center">
@@ -92,17 +117,39 @@ const Comment = ({parentId, id, username, content}: { parentId: string, id: stri
             </p>
           </div>
 
-          <div
-            className="flex justify-center items-center gap-3 cursor-pointer"
-            onClick={Reply}
-          >
-            <Image
-              src={"/images/icon-reply.svg"}
-              width={14}
-              height={14}
-              alt="Reply"
-            ></Image>
-            <p className="font-bold text-lg text-violet-500">Reply</p>
+          <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center gap-2 cursor-pointer" onClick={Edit}>
+              <Image
+                src={"/images/icon-edit.svg"}
+                width={14}
+                height={14}
+                alt="Reply"
+              ></Image>
+              <p className="font-bold text-lg text-violet-500">Edit</p>
+            </div>
+
+            <div className="flex justify-center items-center gap-2 cursor-pointer ml-5">
+              <Image
+                src={"/images/icon-delete.svg"}
+                width={14}
+                height={14}
+                alt="Reply"
+              ></Image>
+              <p className="font-bold text-lg text-red-700">Delete</p>
+            </div>
+
+            <div
+              className={currentUserId == userId ? "hidden" : "flex justify-center items-center gap-3 cursor-pointer"}
+              onClick={Reply}
+            >
+              <Image
+                src={"/images/icon-reply.svg"}
+                width={14}
+                height={14}
+                alt="Reply"
+              ></Image>
+              <p className="font-bold text-lg text-violet-500">Reply</p>
+            </div>
           </div>
         </div>
       </div>
