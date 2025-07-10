@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { CreateReply } from "@/actions/postReply";
 import { FindUser } from "@/lib/services";
 import { DateTime } from "next-auth/providers/kakao";
+import { EditCommentOrReply } from "@/actions/editComment";
 
 const Comment = ({
   parentId,
@@ -51,6 +52,13 @@ const Comment = ({
     setReply(false);
 
     alert("Posted");
+  }
+
+  async function EditComment(){
+
+    await EditCommentOrReply(id, onEditChange)
+
+    alert("Edited")
   }
 
   useEffect(() => {
@@ -100,7 +108,7 @@ const Comment = ({
             <form action="" className="flex flex-col justify-center items-end gap-3 w-full">
               <textarea name="edit" id="edit" cols={4} value={onEditChange} onChange={e => {setOnEditChange(e.target.value)}} className="w-full rounded-lg border-[1px] border-slate-200 outline-slate-400 px-3 py-2"></textarea>
 
-              <button className="bg-violet-500 text-white font-bold text-lg px-6 py-2 rounded-lg text-right">UPDATE</button>
+              <button className="bg-violet-500 text-white font-bold text-lg px-6 py-2 rounded-lg text-right" onClick={EditComment}>UPDATE</button>
             </form>
 
           </div>
