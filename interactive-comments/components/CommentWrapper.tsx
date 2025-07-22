@@ -23,7 +23,7 @@ const CommentWrapper = async ({parentId}: {parentId: string}) => {
         <Comment parentId="parrrr" /> */}
 
         {
-          (await allReplies).map(r => <Comment key={r.id} parentId={parentId} id={r.id} content={r.content} username={r.userId} currentUserId={r.userId}/>)
+          (allReplies).map(r => <Comment key={r.id} parentId={parentId} id={r.id} content={r.content} username={r.userId} currentUserId={r.userId}/>)
         }
       </div>
     </div>

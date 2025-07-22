@@ -1,3 +1,4 @@
+
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -21,7 +22,7 @@ const page = () => {
 
             <div className='flex flex-col mt-5 px-5'>
 
-                <Link href={'/'} className='flex justify-start items-center gap-3 py-5 border-t-[1px] border-t-slate-400'><FaRegUser /> <p>Profile Details</p></Link>
+                <Link href={'/profiledetails'} className='flex justify-start items-center gap-3 py-5 border-t-[1px] border-t-slate-400'><FaRegUser /> <p>Profile Details</p></Link>
                 <Link href={'/'} className='flex justify-start items-center gap-3 py-5 border-t-[1px] border-t-slate-400'><FiLogOut /> <p>Log out</p></Link>
 
             </div>
