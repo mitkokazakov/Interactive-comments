@@ -12,17 +12,18 @@ const Comment = ({
   id,
   username,
   content,
-  currentUserId
+  currentUserId,
 }: {
   parentId: string;
   id: string;
   username: string;
   content: string;
-  currentUserId: string
+  currentUserId: string;
 }) => {
   const [replyClicked, setReply] = useState(false);
   const [editClicked, setEdit] = useState(false);
-  const [onEditChange, setOnEditChange] = useState(content)
+  const [onEditChange, setOnEditChange] = useState(content);
+  const [deleteModalActive, setDeleteModalActive] = useState(false);
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
@@ -32,11 +33,16 @@ const Comment = ({
 
   //const currentUser = await FindUser(userId)
 
+  function HandleDeleteButton() {
+    setDeleteModalActive(true);
+    console.log("del");
+  }
+
   function Reply() {
     setReply(true);
   }
 
-  function Edit(){
+  function Edit() {
     setEdit(true);
   }
 
@@ -54,11 +60,10 @@ const Comment = ({
     alert("Posted");
   }
 
-  async function EditComment(){
+  async function EditComment() {
+    await EditCommentOrReply(id, onEditChange);
 
-    await EditCommentOrReply(id, onEditChange)
-
-    alert("Edited")
+    alert("Edited");
   }
 
   useEffect(() => {
@@ -101,16 +106,33 @@ const Comment = ({
         </div>
 
         <div>
-          <p className={editClicked == true ? 'hidden' : "text-slate-600"}>{content}</p>
+          <p className={editClicked == true ? "hidden" : "text-slate-600"}>
+            {content}
+          </p>
 
           <div className={editClicked == true ? "" : "hidden"}>
+            <form
+              action=""
+              className="flex flex-col justify-center items-end gap-3 w-full"
+            >
+              <textarea
+                name="edit"
+                id="edit"
+                cols={4}
+                value={onEditChange}
+                onChange={(e) => {
+                  setOnEditChange(e.target.value);
+                }}
+                className="w-full rounded-lg border-[1px] border-slate-200 outline-slate-400 px-3 py-2"
+              ></textarea>
 
-            <form action="" className="flex flex-col justify-center items-end gap-3 w-full">
-              <textarea name="edit" id="edit" cols={4} value={onEditChange} onChange={e => {setOnEditChange(e.target.value)}} className="w-full rounded-lg border-[1px] border-slate-200 outline-slate-400 px-3 py-2"></textarea>
-
-              <button className="bg-violet-500 text-white font-bold text-lg px-6 py-2 rounded-lg text-right" onClick={EditComment}>UPDATE</button>
+              <button
+                className="bg-violet-500 text-white font-bold text-lg px-6 py-2 rounded-lg text-right"
+                onClick={EditComment}
+              >
+                UPDATE
+              </button>
             </form>
-
           </div>
         </div>
 
@@ -126,7 +148,10 @@ const Comment = ({
           </div>
 
           <div className="flex justify-center items-center">
-            <div className="flex justify-center items-center gap-2 cursor-pointer" onClick={Edit}>
+            <div
+              className="flex justify-center items-center gap-2 cursor-pointer"
+              onClick={Edit}
+            >
               <Image
                 src={"/images/icon-edit.svg"}
                 width={14}
@@ -143,11 +168,20 @@ const Comment = ({
                 height={14}
                 alt="Reply"
               ></Image>
-              <p className="font-bold text-lg text-red-700">Delete</p>
+              <p
+                className="font-bold text-lg text-red-700"
+                onClick={HandleDeleteButton}
+              >
+                Delete
+              </p>
             </div>
 
             <div
-              className={currentUserId == userId ? "hidden" : "flex justify-center items-center gap-3 cursor-pointer"}
+              className={
+                currentUserId == userId
+                  ? "hidden"
+                  : "flex justify-center items-center gap-3 cursor-pointer"
+              }
               onClick={Reply}
             >
               <Image
@@ -200,6 +234,26 @@ const Comment = ({
             </button>
           </div>
         </form>
+      </div>
+
+      <div
+        className={
+          deleteModalActive == true
+            ? "h-screen w-full flex justify-center items-center fixed top-0 left-0 z-10 bg-[#0000002D] rounded-lg"
+            : "hidden"
+        }
+      >
+        <div className="flex flex-col w-[80%] px-5 py-5 justify-center items-center gap-5 bg-white">
+          <h3 className="text-2xl font-bold tracking-widest">Delete Comment</h3>
+          <p>Are you sure you want to delete this comment? This will remove the comment and can't be undone.</p>
+
+          <div className="flex justify-center items-center gap-5">
+
+            <button className="px-5 py-2 text-white bg-slate-400 font-bold tracking-widest rounded-lg">CANCEL</button>
+            <button className="px-5 py-2 text-white bg-red-400 font-bold tracking-widest rounded-lg">DELETE</button>
+
+          </div>
+        </div>
       </div>
     </div>
   );
