@@ -29,6 +29,10 @@ export async function POST(req: NextRequest) {
   const filename = `${userId}.${extension}`
   const filepath = path.join(uploadsDir, filename + extension)
 
+  if (fs.existsSync(filepath)) {
+    fs.unlinkSync(filepath)
+  }
+
   await writeFile(filepath, buffer)
 
   const changedUserImage = await prisma.user.update({
