@@ -14,7 +14,8 @@ export async function FindUser(userId: string){
 
 export async function GetAllComments() {
     const allComments = await prisma.comment.findMany({where:{
-        parentId: null
+        parentId: null,
+        isDeleted: false
     }});
 
     return allComments
@@ -23,7 +24,8 @@ export async function GetAllComments() {
 export async function GetAllRepliesByComment(commentId: string) {
 
     const replies = await prisma.comment.findMany({where:{
-        parentId: commentId
+        parentId: commentId,
+        isDeleted: false
     }})
     
     return replies
@@ -33,7 +35,8 @@ export async function GetCommentById(commentId: string){
 
     const comment = await prisma.comment.findFirst({
         where: {
-            id: commentId
+            id: commentId,
+            isDeleted: false
         }
     })
 

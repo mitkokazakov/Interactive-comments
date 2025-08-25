@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CreateReply } from "@/actions/postReply";
 import { FindUser } from "@/lib/services";
-import { DateTime } from "next-auth/providers/kakao";
 import { EditCommentOrReply } from "@/actions/editComment";
+import DeleteComment from "@/actions/deleteComment";
 
 const Comment = ({
   parentId,
@@ -38,6 +38,10 @@ const Comment = ({
     console.log("del");
   }
 
+  function HandleCancelDelete(){
+    setDeleteModalActive(false)
+  }
+
   function Reply() {
     setReply(true);
   }
@@ -64,6 +68,11 @@ const Comment = ({
     await EditCommentOrReply(id, onEditChange);
 
     alert("Edited");
+  }
+
+  async function HandleDeleteComment(){
+    await DeleteComment(id)
+    alert("deleted")
   }
 
   useEffect(() => {
@@ -249,8 +258,8 @@ const Comment = ({
 
           <div className="flex justify-center items-center gap-5">
 
-            <button className="px-5 py-2 text-white bg-slate-400 font-bold tracking-widest rounded-lg">CANCEL</button>
-            <button className="px-5 py-2 text-white bg-red-400 font-bold tracking-widest rounded-lg">DELETE</button>
+            <button className="px-5 py-2 text-white bg-slate-400 font-bold tracking-widest rounded-lg" onClick={HandleCancelDelete}>CANCEL</button>
+            <button className="px-5 py-2 text-white bg-red-400 font-bold tracking-widest rounded-lg" onClick={HandleDeleteComment}>DELETE</button>
 
           </div>
         </div>
