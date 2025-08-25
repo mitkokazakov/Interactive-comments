@@ -7,6 +7,7 @@ import { FindUser } from "@/lib/services";
 import { EditCommentOrReply } from "@/actions/editComment";
 import DeleteComment from "@/actions/deleteComment";
 import FindUserById from "@/actions/findUserById";
+import { FindCommentById } from "@/actions/findCommentById";
 
 const Comment = ({
   parentId,
@@ -25,7 +26,10 @@ const Comment = ({
   const [editClicked, setEdit] = useState(false);
   const [onEditChange, setOnEditChange] = useState(content);
   const [deleteModalActive, setDeleteModalActive] = useState(false);
-  const [userImage,setUserImage] = useState('/images/unknown.png')
+  //const [userImage,setUserImage] = useState('/images/unknown.png')
+  const [userInfo,setUserInfo] = useState({userImage: '/images/unknown.png',
+    commentDate: ''
+  })
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
@@ -79,12 +83,22 @@ const Comment = ({
 
   async function HandleUserImage(){
     const currentUser = await FindUserById(userId);
+    const comment = await FindCommentById(id)
 
     const userImage = currentUser?.image
 
     const userImagePath = userImage != null ? `/uploads/${userImage}` : '/images/unknown.png'
 
-    setUserImage(userImagePath)
+    const commentDate = comment?.createdAt
+
+    const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long", year: "numeric" };
+
+    const formated =  commentDate?.toLocaleDateString("en-US", options)
+
+    setUserInfo({
+      userImage: userImagePath,
+      commentDate: formated as string
+    })
   }
 
   useEffect(() => {
@@ -117,7 +131,7 @@ const Comment = ({
         <div className="flex gap-4 items-center">
           <div className="w-8 h-8">
             <Image
-              src={userImage}
+              src={userInfo?.userImage}
               width={32}
               height={32}
               alt="Cover"
@@ -127,7 +141,7 @@ const Comment = ({
 
           <p className="font-bold">amyrobson</p>
 
-          <p>1 year ago</p>
+          <p>{userInfo.commentDate}</p>
         </div>
 
         <div>
