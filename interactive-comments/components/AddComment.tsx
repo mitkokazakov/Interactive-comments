@@ -2,8 +2,19 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CreateComment } from "@/actions/postComment";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authoptions";
+import { FindUser } from "@/lib/services";
 
 const AddComment = async () => {
+
+  const session = await getServerSession(authOptions)
+
+  const userId = session?.user.id as string
+
+  const currentUser = await FindUser(userId)
+
+  const userImage = currentUser?.image
 
 
   return (
@@ -18,12 +29,13 @@ const AddComment = async () => {
         ></textarea>
 
         <div className="w-full flex justify-between items-center">
-          <Link href={"/myprofile"}>
+          <Link href={"/myprofile"} className=" rounded-full">
             <Image
-              src={"/images/random.png"}
+              src={userImage != null ? `/uploads/${userImage}` : '/images/unknown.png'}
               width={32}
               height={32}
               alt="Cover"
+              className="rounded-full"
             ></Image>
           </Link>
 

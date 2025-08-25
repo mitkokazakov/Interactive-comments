@@ -6,6 +6,7 @@ import { CreateReply } from "@/actions/postReply";
 import { FindUser } from "@/lib/services";
 import { EditCommentOrReply } from "@/actions/editComment";
 import DeleteComment from "@/actions/deleteComment";
+import FindUserById from "@/actions/findUserById";
 
 const Comment = ({
   parentId,
@@ -24,6 +25,7 @@ const Comment = ({
   const [editClicked, setEdit] = useState(false);
   const [onEditChange, setOnEditChange] = useState(content);
   const [deleteModalActive, setDeleteModalActive] = useState(false);
+  const [userImage,setUserImage] = useState('/images/unknown.png')
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
@@ -75,7 +77,20 @@ const Comment = ({
     alert("deleted")
   }
 
+  async function HandleUserImage(){
+    const currentUser = await FindUserById(userId);
+
+    const userImage = currentUser?.image
+
+    const userImagePath = userImage != null ? `/uploads/${userImage}` : '/images/unknown.png'
+
+    setUserImage(userImagePath)
+  }
+
   useEffect(() => {
+
+    HandleUserImage();
+
     function handleClickOutside(event: MouseEvent) {
       if (
         replyBoxRef.current &&
@@ -102,10 +117,11 @@ const Comment = ({
         <div className="flex gap-4 items-center">
           <div className="w-8 h-8">
             <Image
-              src={"/images/random.png"}
+              src={userImage}
               width={32}
               height={32}
               alt="Cover"
+              className="rounded-full"
             ></Image>
           </div>
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 import { promisify } from 'util'
+import prisma from '@/lib/prismadb'
 
 const writeFile = promisify(fs.writeFile)
 
@@ -26,9 +27,18 @@ export async function POST(req: NextRequest) {
 
   const extension = path.extname(file.name)
   const filename = `${userId}.${extension}`
-  const filepath = path.join(uploadsDir, filename)
+  const filepath = path.join(uploadsDir, filename + extension)
 
   await writeFile(filepath, buffer)
+
+  const changedUserImage = await prisma.user.update({
+    data: {
+      image: filename + extension
+    },
+    where:{
+      id: userId
+    }
+  })
 
   return NextResponse.json({ success: true, path: `/uploads/${filename}` })
 }

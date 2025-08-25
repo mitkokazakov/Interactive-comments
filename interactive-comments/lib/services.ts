@@ -1,7 +1,6 @@
 import prisma from "./prismadb";
 
 export async function FindUser(userId: string){
-
     const currentUser = await prisma.user.findFirst({
         where:{
             id: userId
