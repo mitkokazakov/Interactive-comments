@@ -12,15 +12,16 @@ const CommentWrapper = async ({parentId}: {parentId: string}) => {
   const username = currentComment?.userId as string
   const date = currentComment?.createdAt
   const userId = currentComment?.userId as string
+  const likes = currentComment?.likes as number
 
   return (
     <div className="w-full flex flex-col justify-center items-end gap-4">
-      <Comment parentId={parentId} id={parentId} content={content} username={username} currentUserId={userId}/>
+      <Comment parentId={parentId} id={parentId} content={content} likes={likes} currentUserId={userId}/>
 
       <div className="w-[90%] flex flex-col justify-center items-center gap-4 border-l-[1px] border-l-slate-400 pl-5">
       
         {
-          (allReplies).map(r => <Comment key={r.id} parentId={parentId} id={r.id} content={r.content} username={r.userId} currentUserId={r.userId}/>)
+          (allReplies).map(r => <Comment key={r.id} parentId={parentId} id={r.id} content={r.content} likes={r.likes} currentUserId={r.userId}/>)
         }
       </div>
     </div>

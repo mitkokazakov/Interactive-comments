@@ -8,17 +8,18 @@ import { EditCommentOrReply } from "@/actions/editComment";
 import DeleteComment from "@/actions/deleteComment";
 import FindUserById from "@/actions/findUserById";
 import { FindCommentById } from "@/actions/findCommentById";
+import VotePlus from "@/actions/votePlus";
 
 const Comment = ({
   parentId,
   id,
-  username,
+  likes,
   content,
   currentUserId,
 }: {
   parentId: string;
   id: string;
-  username: string;
+  likes: number;
   content: string;
   currentUserId: string;
 }) => {
@@ -100,13 +101,16 @@ const Comment = ({
 
     const emailUsername = userEmail?.split('@')[0]
 
-    //const userName: string = emailArray?[0]
-
     setUserInfo({
       userImage: userImagePath,
       commentDate: formated as string,
       username: emailUsername as string
     })
+  }
+
+  async function HandleVotePlus(){
+      await VotePlus(id)
+      alert("voted")
   }
 
 
@@ -186,10 +190,10 @@ const Comment = ({
 
         <div className="flex justify-between items-center">
           <div className="bg-slate-100 rounded-lg flex justify-center items-center gap-5 px-2 py-1">
-            <p className="font-bold text-2xl text-slate-300 cursor-pointer">
+            <p className="font-bold text-2xl text-slate-300 cursor-pointer" onClick={HandleVotePlus}>
               +
             </p>
-            <p className="font-bold text-blue-400">1</p>
+            <p className="font-bold text-blue-400">{likes}</p>
             <p className="font-bold text-2xl text-slate-300 cursor-pointer">
               -
             </p>
