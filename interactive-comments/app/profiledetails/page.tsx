@@ -1,15 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import FindUserById from "@/actions/findUserById";
 
 const page = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
 
-   const { data: session, status } = useSession();
-  
-    const userId = session?.user?.id as string;
+  const [userInfo, setUserInfo] = useState({
+    userEmail: '',
+    userImage: '/public/unknown.png'
+  })
+
+  const { data: session, status } = useSession();
+
+  const userId = session?.user?.id as string;
 
   function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -17,7 +23,7 @@ const page = () => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setPreview(imageUrl);
-      setImage(file)
+      setImage(file);
     }
   }
 
@@ -43,26 +49,45 @@ const page = () => {
     }
   }
 
+  async function HandleUserEmailAndImage(userId: string) {
+
+    const currentUser = await FindUserById(userId);
+
+    const userImagePath =
+      currentUser?.image != null
+        ? `/uploads/${currentUser.image}`
+        : "/images/unknown.png";
+
+        setUserInfo({
+          userEmail: currentUser?.email as string,
+          userImage: userImagePath
+        })
+  }
+
+  useEffect(() => {
+    HandleUserEmailAndImage(userId)
+  },[])
+
   return (
     <div className="h-screen bg-white">
       <div className="w-full h-full">
-        <div className="h-52 bg-violet-200 relative">
-          <div className="h-32 w-32 rounded-full absolute bottom-[-50%] left-50 translate-x-[-50%] translate-y-[-50%]">
+        <div className="h-52 bg-violet-200 relative flex justify-center items-end">
+          <div className="h-32 w-32 rounded-full mb-[-30px]">
             <Image
-              src={"/images/random.png"}
+              src={userInfo.userImage}
               height={130}
               width={130}
               alt="Profile"
-              className="w-full h-full"
+              className="w-full h-full rounded-full"
             ></Image>
           </div>
         </div>
 
         <div className="w-full pt-14">
-          <p className="text-center font-bold text-2xl">Mitko Kazakov</p>
+          {/* <p className="text-center font-bold text-2xl">Mitko Kazakov</p> */}
 
-          <p className="text-center font-semibold text-lg mt-5">
-            sample@gmail.com
+          <p className="text-center font-semibold text-lg mt-2 mb-5">
+            {userInfo.userEmail}
           </p>
 
           <div className="w-full">

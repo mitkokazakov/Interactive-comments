@@ -26,9 +26,10 @@ const Comment = ({
   const [editClicked, setEdit] = useState(false);
   const [onEditChange, setOnEditChange] = useState(content);
   const [deleteModalActive, setDeleteModalActive] = useState(false);
-  //const [userImage,setUserImage] = useState('/images/unknown.png')
-  const [userInfo,setUserInfo] = useState({userImage: '/images/unknown.png',
-    commentDate: ''
+  const [userInfo,setUserInfo] = useState({
+    userImage: '/images/unknown.png',
+    commentDate: '',
+    username: ''
   })
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
@@ -95,11 +96,19 @@ const Comment = ({
 
     const formated =  commentDate?.toLocaleDateString("en-US", options)
 
+    const userEmail = currentUser?.email
+
+    const emailUsername = userEmail?.split('@')[0]
+
+    //const userName: string = emailArray?[0]
+
     setUserInfo({
       userImage: userImagePath,
-      commentDate: formated as string
+      commentDate: formated as string,
+      username: emailUsername as string
     })
   }
+
 
   useEffect(() => {
 
@@ -139,7 +148,7 @@ const Comment = ({
             ></Image>
           </div>
 
-          <p className="font-bold">amyrobson</p>
+          <p className="font-bold">{userInfo.username}</p>
 
           <p>{userInfo.commentDate}</p>
         </div>

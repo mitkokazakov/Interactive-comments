@@ -18,10 +18,7 @@ const CommentWrapper = async ({parentId}: {parentId: string}) => {
       <Comment parentId={parentId} id={parentId} content={content} username={username} currentUserId={userId}/>
 
       <div className="w-[90%] flex flex-col justify-center items-center gap-4 border-l-[1px] border-l-slate-400 pl-5">
-        {/* <Comment parentId="parrrr" />
-        <Comment parentId="parrrr" />
-        <Comment parentId="parrrr" /> */}
-
+      
         {
           (allReplies).map(r => <Comment key={r.id} parentId={parentId} id={r.id} content={r.content} username={r.userId} currentUserId={r.userId}/>)
         }
