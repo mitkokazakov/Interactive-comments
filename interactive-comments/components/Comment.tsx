@@ -9,6 +9,7 @@ import DeleteComment from "@/actions/deleteComment";
 import FindUserById from "@/actions/findUserById";
 import { FindCommentById } from "@/actions/findCommentById";
 import VotePlus from "@/actions/votePlus";
+import VoteMinus from "@/actions/voteMinus";
 
 const Comment = ({
   parentId,
@@ -113,6 +114,11 @@ const Comment = ({
       alert("voted")
   }
 
+  async function HandleVoteMinus(){
+      await VoteMinus(id)
+      alert("voted")
+  }
+
 
   useEffect(() => {
 
@@ -194,7 +200,7 @@ const Comment = ({
               +
             </p>
             <p className="font-bold text-blue-400">{likes}</p>
-            <p className="font-bold text-2xl text-slate-300 cursor-pointer">
+            <p className="font-bold text-2xl text-slate-300 cursor-pointer" onClick={HandleVoteMinus}>
               -
             </p>
           </div>
