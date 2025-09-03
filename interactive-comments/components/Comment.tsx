@@ -10,6 +10,7 @@ import FindUserById from "@/actions/findUserById";
 import { FindCommentById } from "@/actions/findCommentById";
 import VotePlus from "@/actions/votePlus";
 import VoteMinus from "@/actions/voteMinus";
+import FindVoteById from "@/actions/findVoteById";
 
 const Comment = ({
   parentId,
@@ -28,11 +29,11 @@ const Comment = ({
   const [editClicked, setEdit] = useState(false);
   const [onEditChange, setOnEditChange] = useState(content);
   const [deleteModalActive, setDeleteModalActive] = useState(false);
-  const [userInfo,setUserInfo] = useState({
-    userImage: '/images/unknown.png',
-    commentDate: '',
-    username: ''
-  })
+  const [userInfo, setUserInfo] = useState({
+    userImage: "/images/unknown.png",
+    commentDate: "",
+    username: "",
+  });
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
@@ -47,8 +48,8 @@ const Comment = ({
     console.log("del");
   }
 
-  function HandleCancelDelete(){
-    setDeleteModalActive(false)
+  function HandleCancelDelete() {
+    setDeleteModalActive(false);
   }
 
   function Reply() {
@@ -79,49 +80,64 @@ const Comment = ({
     alert("Edited");
   }
 
-  async function HandleDeleteComment(){
-    await DeleteComment(id)
-    alert("deleted")
+  async function HandleDeleteComment() {
+    await DeleteComment(id);
+    alert("deleted");
   }
 
-  async function HandleUserImage(){
+  async function HandleUserImage() {
     const currentUser = await FindUserById(userId);
-    const comment = await FindCommentById(id)
+    const comment = await FindCommentById(id);
 
-    const userImage = currentUser?.image
+    const userImage = currentUser?.image;
 
-    const userImagePath = userImage != null ? `/uploads/${userImage}` : '/images/unknown.png'
+    const userImagePath =
+      userImage != null ? `/uploads/${userImage}` : "/images/unknown.png";
 
-    const commentDate = comment?.createdAt
+    const commentDate = comment?.createdAt;
 
-    const options: Intl.DateTimeFormatOptions = { day: "numeric", month: "long", year: "numeric" };
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
 
-    const formated =  commentDate?.toLocaleDateString("en-US", options)
+    const formated = commentDate?.toLocaleDateString("en-US", options);
 
-    const userEmail = currentUser?.email
+    const userEmail = currentUser?.email;
 
-    const emailUsername = userEmail?.split('@')[0]
+    const emailUsername = userEmail?.split("@")[0];
 
     setUserInfo({
       userImage: userImagePath,
       commentDate: formated as string,
-      username: emailUsername as string
-    })
+      username: emailUsername as string,
+    });
   }
 
-  async function HandleVotePlus(){
-      await VotePlus(id)
-      alert("voted")
+  async function HandleVotePlus() {
+    const vote = await FindVoteById(id);
+
+    if(vote?.type == "PLUS" && vote.userId == userId){
+      return
+    }
+    await VotePlus(id, userId);
+    alert("voted");
   }
 
-  async function HandleVoteMinus(){
-      await VoteMinus(id)
-      alert("voted")
-  }
+  async function HandleVoteMinus() {
+    const vote = await FindVoteById(id);
 
+
+    if(vote?.type == "MINUS" && vote.userId == userId){
+      return
+    }
+
+    await VoteMinus(id, userId);
+    alert("voted");
+  }
 
   useEffect(() => {
-
     HandleUserImage();
 
     function handleClickOutside(event: MouseEvent) {
@@ -196,11 +212,17 @@ const Comment = ({
 
         <div className="flex justify-between items-center">
           <div className="bg-slate-100 rounded-lg flex justify-center items-center gap-5 px-2 py-1">
-            <p className="font-bold text-2xl text-slate-300 cursor-pointer" onClick={HandleVotePlus}>
+            <p
+              className="font-bold text-2xl text-slate-300 cursor-pointer"
+              onClick={HandleVotePlus}
+            >
               +
             </p>
             <p className="font-bold text-blue-400">{likes}</p>
-            <p className="font-bold text-2xl text-slate-300 cursor-pointer" onClick={HandleVoteMinus}>
+            <p
+              className="font-bold text-2xl text-slate-300 cursor-pointer"
+              onClick={HandleVoteMinus}
+            >
               -
             </p>
           </div>
@@ -303,13 +325,24 @@ const Comment = ({
       >
         <div className="flex flex-col w-[80%] px-5 py-5 justify-center items-center gap-5 bg-white">
           <h3 className="text-2xl font-bold tracking-widest">Delete Comment</h3>
-          <p>Are you sure you want to delete this comment? This will remove the comment and can't be undone.</p>
+          <p>
+            Are you sure you want to delete this comment? This will remove the
+            comment and can't be undone.
+          </p>
 
           <div className="flex justify-center items-center gap-5">
-
-            <button className="px-5 py-2 text-white bg-slate-400 font-bold tracking-widest rounded-lg" onClick={HandleCancelDelete}>CANCEL</button>
-            <button className="px-5 py-2 text-white bg-red-400 font-bold tracking-widest rounded-lg" onClick={HandleDeleteComment}>DELETE</button>
-
+            <button
+              className="px-5 py-2 text-white bg-slate-400 font-bold tracking-widest rounded-lg"
+              onClick={HandleCancelDelete}
+            >
+              CANCEL
+            </button>
+            <button
+              className="px-5 py-2 text-white bg-red-400 font-bold tracking-widest rounded-lg"
+              onClick={HandleDeleteComment}
+            >
+              DELETE
+            </button>
           </div>
         </div>
       </div>

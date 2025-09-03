@@ -23,6 +23,7 @@ model User {
   accounts       Account[]
   sessions       Session[]
   comments       Comment[]
+  votes           Vote[]
 }
 
 model Account {
@@ -62,18 +63,35 @@ model VerificationToken {
 }
 
 model Comment {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   content   String
-  createdAt DateTime  @default(now())
-  isDeleted Boolean   @default(false)
-  likes     Int       @default(0)
+  createdAt DateTime @default(now())
+  isDeleted Boolean  @default(false)
+  likes     Int      @default(0)
   userId    String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   parentId  String?
-  isReply   Boolean   @default(false)
+  isReply   Boolean  @default(false)
+  votes     Vote[]
 
   @@index([createdAt])
   @@index([userId])
 }
 
+model Vote {
+  id        String   @id @default(cuid())
+  type      VoteType
+  userId    String
+  commentId String
+  createdAt DateTime @default(now())
 
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId]) // prevents duplicate votes from same user
+}
+
+enum VoteType {
+  PLUS
+  MINUS
+}
