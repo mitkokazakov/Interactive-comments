@@ -36,7 +36,7 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
       const res = await signIn('credentials', {
         email: data.email,
         password: data.password,
-        redirect: false,
+        redirect: true,
         callbackUrl: "/"
       })
 

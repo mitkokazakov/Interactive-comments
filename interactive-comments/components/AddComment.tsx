@@ -19,7 +19,11 @@ const AddComment = async () => {
 
   return (
     <div className="w-full flex flex-col gap-5 bg-white rounded-lg p-4 mt-3">
-      <form className="w-full" action={CreateComment}>
+      <div className={userId == null ? 'w-full text-center' : 'hidden'}>
+        <p>If you want to add a comment please <Link href={'/login'} className="font-bold text-lg">Log In</Link> or <Link href={'/register'} className="font-bold text-lg">Sign Up</Link>!</p>
+      </div>
+
+      <form className={userId == null ? 'hidden' : `w-full`} action={CreateComment}>
         <textarea
           className="w-full rounded-lg border-[1px] border-slate-200 outline-slate-400 p-2"
           name="comment"

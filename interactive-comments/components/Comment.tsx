@@ -86,8 +86,8 @@ const Comment = ({
   }
 
   async function HandleUserImage() {
-    const currentUser = await FindUserById(userId);
     const comment = await FindCommentById(id);
+    const currentUser = await FindUserById(comment?.userId as string);
 
     const userImage = currentUser?.image;
 
@@ -258,7 +258,7 @@ const Comment = ({
 
             <div
               className={
-                currentUserId == userId
+                currentUserId == currentUserId
                   ? "hidden"
                   : "flex justify-center items-center gap-3 cursor-pointer"
               }

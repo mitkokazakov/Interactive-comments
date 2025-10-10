@@ -3,10 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import { FaRegUser } from "react-icons/fa";
-import { FiLogOut } from "react-icons/fi";
 import { authOptions } from '@/lib/authoptions';
 import { getServerSession } from 'next-auth';
 import FindUserById from '@/actions/findUserById';
+import LogOut from '@/components/LogOut';
 
 const page = async () => {
 
@@ -17,6 +17,9 @@ const page = async () => {
   const currentUser = await FindUserById(userId)
 
   const userImagePath = currentUser?.image != null ? `/uploads/${currentUser.image}` : '/images/unknown.png'
+
+  console.log(currentUser?.id);
+  
 
   return (
     <div className='h-screen bg-white'>
@@ -35,7 +38,7 @@ const page = async () => {
             <div className='flex flex-col mt-5 px-5'>
 
                 <Link href={'/profiledetails'} className='flex justify-start items-center gap-3 py-5 border-t-[1px] border-t-slate-400'><FaRegUser /> <p>Profile Details</p></Link>
-                <Link href={'/'} className='flex justify-start items-center gap-3 py-5 border-t-[1px] border-t-slate-400'><FiLogOut /> <p>Log out</p></Link>
+                <LogOut/>
 
             </div>
         </div>

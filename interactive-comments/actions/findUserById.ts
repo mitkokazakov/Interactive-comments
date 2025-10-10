@@ -3,7 +3,12 @@
 import prisma from "@/lib/prismadb"
 
 export default async function FindUserById(userId: string){
-const currentUser = await prisma.user.findFirst({
+
+    if (userId == null){
+        return null
+    }
+
+const currentUser = await prisma.user.findUnique({
         where:{
             id: userId
         }
