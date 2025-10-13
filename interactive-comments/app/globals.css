@@ -1,4 +1,10 @@
+
+
 @import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-rubik), system-ui, sans-serif;
+}
 
 
 

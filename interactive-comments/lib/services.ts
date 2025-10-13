@@ -15,7 +15,11 @@ export async function GetAllComments() {
     const allComments = await prisma.comment.findMany({where:{
         parentId: null,
         isDeleted: false
-    }});
+    },
+    orderBy: {
+        createdAt: 'asc'
+    }
+    });
 
     return allComments
 }

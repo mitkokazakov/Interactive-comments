@@ -12,10 +12,13 @@ import { GoInfo } from "react-icons/go";
 
 import { registerUser } from "@/actions/registerAction";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const LoginForm = ({ formtype }: { formtype: string }) => {
 
     const [isPending, startTransition] = useTransition();
+
+    const router = useRouter();
 
     
   const {
@@ -62,7 +65,8 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
         }
 
         if(res.success){
-            alert(res.success)
+          router.push('/login')
+          alert(res.success)
         }
       })
     }
