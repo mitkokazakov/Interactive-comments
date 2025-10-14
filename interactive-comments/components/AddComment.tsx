@@ -45,7 +45,7 @@ const AddComment = async () => {
 
           <button
             type="submit"
-            className="text-white bg-violet-500 font-bold text-lg px-6 py-2 rounded-lg"
+            className="text-white bg-violet-500 font-bold text-lg px-6 py-2 rounded-lg cursor-pointer tracking-widest"
           >
             SEND
           </button>

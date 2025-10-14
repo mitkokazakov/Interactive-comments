@@ -40,8 +40,30 @@ export async function GetCommentById(commentId: string){
         where: {
             id: commentId,
             isDeleted: false
+        },
+        include:{
+            votes: {
+                select:{
+                    type: true
+                }
+            }
         }
     })
 
     return comment
+}
+
+export async function GetVoteType(commentId: string, userId: string){
+
+    const vote = await prisma.vote.findFirst({
+        where: {
+            commentId: commentId,
+            userId: userId
+        },
+        select:{
+            type: true
+        }
+    })
+
+    return vote?.type as string
 }

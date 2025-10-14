@@ -11,6 +11,7 @@ import { FindCommentById } from "@/actions/findCommentById";
 import VotePlus from "@/actions/votePlus";
 import VoteMinus from "@/actions/voteMinus";
 import FindVoteById from "@/actions/findVoteById";
+import { FindVoteType } from "@/actions/findVoteType";
 
 const Comment = ({
   parentId,
@@ -35,6 +36,8 @@ const Comment = ({
     username: "",
   });
 
+  const [voteType,setVoteType] = useState<string>('')
+
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
   const { data: session, status } = useSession();
@@ -42,6 +45,12 @@ const Comment = ({
   const userId = session?.user?.id as string;
 
   //const currentUser = await FindUser(userId)
+
+  async function HandleVoteType(){
+     const currentVoteType = await FindVoteType(id, userId)
+
+     setVoteType(currentVoteType)
+  }
 
   function HandleDeleteButton() {
     setDeleteModalActive(true);
@@ -122,6 +131,9 @@ const Comment = ({
       return
     }
     await VotePlus(id, userId);
+
+    await HandleVoteType();
+
     alert("voted");
   }
 
@@ -134,11 +146,15 @@ const Comment = ({
     }
 
     await VoteMinus(id, userId);
+
+    await HandleVoteType();
+
     alert("voted");
   }
 
   useEffect(() => {
     HandleUserImage();
+    HandleVoteType();
 
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -213,14 +229,14 @@ const Comment = ({
         <div className="flex justify-between items-center">
           <div className="bg-slate-100 rounded-lg flex justify-center items-center gap-5 px-2 py-1">
             <p
-              className="font-bold text-2xl text-slate-300 cursor-pointer"
+              className={`font-bold text-2xl text-slate-300 cursor-pointer ${voteType == 'PLUS' ? 'pointer-events-none' : 'pointer-events-auto'}`}
               onClick={HandleVotePlus}
             >
               +
             </p>
             <p className="font-bold text-blue-400">{likes}</p>
             <p
-              className="font-bold text-2xl text-slate-300 cursor-pointer"
+              className={`font-bold text-2xl text-slate-300 cursor-pointer ${voteType == 'MINUS' ? 'pointer-events-none' : 'pointer-events-auto'}`}
               onClick={HandleVoteMinus}
             >
               -
@@ -238,10 +254,10 @@ const Comment = ({
                 height={14}
                 alt="Reply"
               ></Image>
-              <p className="font-bold text-lg text-violet-500">Edit</p>
+              <p className="font-bold text-lg text-violet-500 tracking-widest">Edit</p>
             </div>
 
-            <div className="flex justify-center items-center gap-2 cursor-pointer ml-5">
+            <div className="flex justify-center items-center gap-2 cursor-pointer ml-8">
               <Image
                 src={"/images/icon-delete.svg"}
                 width={14}
@@ -249,7 +265,7 @@ const Comment = ({
                 alt="Reply"
               ></Image>
               <p
-                className="font-bold text-lg text-red-700"
+                className="font-bold text-lg text-red-700 tracking-widest"
                 onClick={HandleDeleteButton}
               >
                 Delete
@@ -270,7 +286,7 @@ const Comment = ({
                 height={14}
                 alt="Reply"
               ></Image>
-              <p className="font-bold text-lg text-violet-500">Reply</p>
+              <p className="font-bold text-lg text-violet-500 tracking-widest">Reply</p>
             </div>
           </div>
         </div>
