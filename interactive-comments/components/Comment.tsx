@@ -176,6 +176,10 @@ const Comment = ({
     };
   }, [replyClicked]);
 
+  console.log("User Id", userId);
+  console.log("Comment User Id", currentUserId);
+  
+
   return (
     <div className="w-full flex flex-col">
       <div className="w-full flex flex-col gap-5 bg-white rounded-lg p-4">
@@ -245,7 +249,7 @@ const Comment = ({
 
           <div className="flex justify-center items-center">
             <div
-              className="flex justify-center items-center gap-2 cursor-pointer"
+              className={userId == currentUserId ? "flex justify-center items-center gap-2 cursor-pointer" : "hidden"}
               onClick={Edit}
             >
               <Image
@@ -257,7 +261,7 @@ const Comment = ({
               <p className="font-bold text-lg text-violet-500 tracking-widest">Edit</p>
             </div>
 
-            <div className="flex justify-center items-center gap-2 cursor-pointer ml-8">
+            <div className={userId == currentUserId ? "flex justify-center items-center gap-2 cursor-pointer ml-8" : "hidden"}>
               <Image
                 src={"/images/icon-delete.svg"}
                 width={14}
@@ -274,9 +278,9 @@ const Comment = ({
 
             <div
               className={
-                currentUserId == currentUserId
-                  ? "hidden"
-                  : "flex justify-center items-center gap-3 cursor-pointer"
+                userId !== currentUserId
+                  ? "flex justify-center items-center gap-3 cursor-pointer"
+                  : "hidden"
               }
               onClick={Reply}
             >
