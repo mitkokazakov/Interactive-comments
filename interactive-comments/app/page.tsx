@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen bg-[#f3f5f8]">
-      <div className="flex flex-col justify-center items-center gap-4 p-4">
+      <div className="flex flex-col justify-center items-center gap-4 p-4 max-w-[1200px] mx-auto">
 
         {
           allComments?.map(c => <CommentWrapper key={c.id} parentId={c.id}/>)

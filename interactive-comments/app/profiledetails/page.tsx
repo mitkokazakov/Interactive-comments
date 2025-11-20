@@ -72,11 +72,11 @@ const page = () => {
     <div className="h-screen bg-white">
       <div className="w-full h-full">
         <div className="h-52 bg-violet-200 relative flex justify-center items-end">
-          <div className="h-32 w-32 rounded-full mb-[-30px]">
+          <div className="h-48 w-48 rounded-full mb-[-30px]">
             <Image
               src={userInfo.userImage}
-              height={130}
-              width={130}
+              height={160}
+              width={160}
               alt="Profile"
               className="w-full h-full rounded-full"
             ></Image>
@@ -95,7 +95,7 @@ const page = () => {
               onSubmit={handleOnSubmit}
               className="w-full px-3 flex flex-col justify-center items-center gap-2"
             >
-              <label htmlFor="image" className=" w-full">
+              <label htmlFor="image" className="tracking-widest">
                 Change Profile Image
               </label>
               <input
@@ -104,7 +104,8 @@ const page = () => {
                 name="image"
                 placeholder="Browse"
                 onChange={handleOnChange}
-                className="bg-white placeholder:text-gray-400 block w-full py-1.5 px-3 border-1 border-black"
+                className="bg-white placeholder:text-gray-400 block py-1.5 px-3 border-1 border-black rounded-2xl"
+                required
               />
               <div className="w-full mt-3">
                 {/* <Image src={'/images/random.png'} height={100} width={100} alt='Profile' className='w-full h-full'></Image> */}
@@ -116,7 +117,7 @@ const page = () => {
                   />
                 )}
               </div>
-              <button className="bg-amber-300 px-3 py-2 rounded-lg">
+              <button className="bg-violet-300 px-3 py-2 rounded-lg cursor-pointer tracking-widest hover:bg-violet-400">
                 Change
               </button>
             </form>

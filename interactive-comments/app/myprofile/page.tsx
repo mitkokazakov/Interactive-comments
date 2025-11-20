@@ -25,8 +25,8 @@ const page = async () => {
     <div className='h-screen bg-white'>
       <div className='w-full h-full'>
         <div className='h-52 bg-violet-200 relative flex justify-center items-end '>
-            <div className='h-32 w-32 rounded-full mb-[-30px]'>
-                <Image src={userImagePath} height={130} width={130} alt='Profile' className='w-full h-full rounded-full'></Image>
+            <div className='h-48 w-48 rounded-full mb-[-30px]'>
+                <Image src={userImagePath} height={160} width={160} alt='Profile' className='w-full h-full rounded-full'></Image>
             </div>
         </div>
 
