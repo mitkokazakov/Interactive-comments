@@ -27,6 +27,7 @@ const Comment = ({
   currentUserId: string;
 }) => {
   const [replyClicked, setReply] = useState(false);
+  const [replyText, setReplyText] = useState("");
   const [editClicked, setEdit] = useState(false);
   const [onEditChange, setOnEditChange] = useState(content);
   const [deleteModalActive, setDeleteModalActive] = useState(false);
@@ -36,6 +37,8 @@ const Comment = ({
     username: "",
   });
 
+  const [userImageForReply,setUserImageForReply] = useState<string>("/images/unknown.png")
+
   const [voteType,setVoteType] = useState<string>('')
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
@@ -44,7 +47,11 @@ const Comment = ({
 
   const userId = session?.user?.id as string;
 
-  //const currentUser = await FindUser(userId)
+  async function SetReplyUserImage(){
+    const currentUser = await FindUserById(userId)
+
+    setUserImageForReply(currentUser?.image != null ? `/uploads/${currentUser.image}` : "/images/unknown.png")
+  }
 
   async function HandleVoteType(){
      const currentVoteType = await FindVoteType(id, userId)
@@ -63,6 +70,7 @@ const Comment = ({
 
   function Reply() {
     setReply(true);
+    setReplyText(`@${userInfo.username} `);
   }
 
   function Edit() {
@@ -70,16 +78,16 @@ const Comment = ({
   }
 
   async function PostReply() {
-    const content = replyBoxRef.current?.querySelector("textarea")?.value || "";
+    //const content = replyBoxRef.current?.querySelector("textarea")?.value || "";
 
     if (!content.trim()) return;
 
     console.log(userId);
 
-    await CreateReply(userId, parentId, content);
+    await CreateReply(userId, parentId, replyText);
 
     setReply(false);
-
+    setReplyText("");
     alert("Posted");
   }
 
@@ -155,6 +163,7 @@ const Comment = ({
   useEffect(() => {
     HandleUserImage();
     HandleVoteType();
+    SetReplyUserImage();
 
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -233,14 +242,14 @@ const Comment = ({
         <div className="flex justify-between items-center">
           <div className="bg-slate-100 rounded-lg flex justify-center items-center gap-5 px-2 py-1">
             <p
-              className={`font-bold text-2xl text-slate-300 cursor-pointer ${voteType == 'PLUS' ? 'pointer-events-none' : 'pointer-events-auto'}`}
+              className={`font-bold text-2xl text-slate-300 cursor-pointer ${userId == null || voteType == 'PLUS' ? 'pointer-events-none' : 'pointer-events-auto'}`}
               onClick={HandleVotePlus}
             >
               +
             </p>
             <p className="font-bold text-blue-400">{likes}</p>
             <p
-              className={`font-bold text-2xl text-slate-300 cursor-pointer ${voteType == 'MINUS' ? 'pointer-events-none' : 'pointer-events-auto'}`}
+              className={`font-bold text-2xl text-slate-300 cursor-pointer ${userId == null || voteType == 'MINUS' ? 'pointer-events-none' : 'pointer-events-auto'}`}
               onClick={HandleVoteMinus}
             >
               -
@@ -278,7 +287,7 @@ const Comment = ({
 
             <div
               className={
-                userId !== currentUserId
+                userId !== currentUserId && userId != null
                   ? "flex justify-center items-center gap-3 cursor-pointer"
                   : "hidden"
               }
@@ -312,18 +321,21 @@ const Comment = ({
           className="w-full"
         >
           <textarea
-            className="rounded-lg border-[1px] border-slate-200 outline-slate-400 w-full"
+            className="rounded-lg border-[1px] border-slate-200 outline-slate-400 w-full p-3"
             name="answer"
             id="answer"
             rows={4}
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
           ></textarea>
 
-          <div className="w-full flex justify-between items-center">
+          <div className="w-full flex justify-between items-center rounded-full">
             <Image
-              src={"/images/random.png"}
+              src={userImageForReply as string}
               width={32}
               height={32}
               alt="Cover"
+              className="rounded-full"
             ></Image>
 
             <button
