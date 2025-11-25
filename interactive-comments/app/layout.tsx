@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Rubik } from "next/font/google";
 import "./globals.css";
 import AuthContext from "@/context/AuthContext";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Interactive comments",
@@ -21,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={rubik.variable}>
       <body className={` `}>
-        <AuthContext>{children}</AuthContext>
+        <AuthContext>
+          {children}
+          <Toaster  position="top-right" />
+          </AuthContext>
       </body>
     </html>
   );

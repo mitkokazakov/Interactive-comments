@@ -13,6 +13,7 @@ import { GoInfo } from "react-icons/go";
 import { registerUser } from "@/actions/registerAction";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const LoginForm = ({ formtype }: { formtype: string }) => {
 
@@ -44,11 +45,13 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
       })
 
       if(res?.error){
-        alert(res.error)
+        //alert(res.error)
+        toast.error(res.error)
       }
 
       if(res?.ok){
-        alert("Login success")
+        //alert("Login success")
+        toast.success("Login success")
       }
     }
 
@@ -60,13 +63,15 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
       startTransition(async () => {
         const res = await registerUser(data);
 
-        if(res.error){
+        if(res?.error){
             alert(res.error)
+            toast.error("Something went wrong! Please try again.")
         }
 
         if(res.success){
           router.push('/login')
           alert(res.success)
+          toast.success(res.success)
         }
       })
     }

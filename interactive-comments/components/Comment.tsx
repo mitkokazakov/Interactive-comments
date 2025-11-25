@@ -12,6 +12,7 @@ import VotePlus from "@/actions/votePlus";
 import VoteMinus from "@/actions/voteMinus";
 import FindVoteById from "@/actions/findVoteById";
 import { FindVoteType } from "@/actions/findVoteType";
+import toast from "react-hot-toast";
 
 const Comment = ({
   parentId,
@@ -36,6 +37,7 @@ const Comment = ({
     commentDate: "",
     username: "",
   });
+  const [contentParts, setContentParts] = useState({firstPart: "", restPart: ""});
 
   const [userImageForReply,setUserImageForReply] = useState<string>("/images/unknown.png")
 
@@ -46,6 +48,17 @@ const Comment = ({
   const { data: session, status } = useSession();
 
   const userId = session?.user?.id as string;
+
+  async function DetermineContentParts(){
+
+    const firstPart = content.split(" ")[0];
+    const restPart = content.split(" ").slice(1).join(" ");
+
+    setContentParts({
+      firstPart:firstPart,
+      restPart:restPart
+    })
+  }
 
   async function SetReplyUserImage(){
     const currentUser = await FindUserById(userId)
@@ -88,18 +101,23 @@ const Comment = ({
 
     setReply(false);
     setReplyText("");
-    alert("Posted");
+    //alert("Posted");
+    toast.success("Reply posted successfully!");
   }
 
   async function EditComment() {
     await EditCommentOrReply(id, onEditChange);
 
-    alert("Edited");
+    //alert("Edited");
+
+    toast.success("Comment edited successfully!");
   }
 
   async function HandleDeleteComment() {
     await DeleteComment(id);
-    alert("deleted");
+    //alert("deleted");
+
+    toast.success("Comment deleted successfully!");
   }
 
   async function HandleUserImage() {
@@ -142,7 +160,9 @@ const Comment = ({
 
     await HandleVoteType();
 
-    alert("voted");
+    //alert("voted");
+
+    toast.success("Voted successfully!");
   }
 
   async function HandleVoteMinus() {
@@ -157,13 +177,16 @@ const Comment = ({
 
     await HandleVoteType();
 
-    alert("voted");
+    //alert("voted");
+
+    toast.success("Voted successfully!");
   }
 
   useEffect(() => {
     HandleUserImage();
     HandleVoteType();
     SetReplyUserImage();
+    DetermineContentParts();
 
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -210,7 +233,8 @@ const Comment = ({
 
         <div>
           <p className={editClicked == true ? "hidden" : "text-slate-600"}>
-            {content}
+            <span className="text-violet-700 font-bold tracking-widest">{contentParts.firstPart}</span>
+            {contentParts.restPart != "" ? <span> {contentParts.restPart}</span> : null}
           </p>
 
           <div className={editClicked == true ? "" : "hidden"}>
@@ -230,7 +254,7 @@ const Comment = ({
               ></textarea>
 
               <button
-                className="bg-violet-500 text-white font-bold text-lg px-6 py-2 rounded-lg text-right"
+                className="bg-violet-500 text-white font-bold text-lg px-6 py-2 rounded-lg text-right cursor-pointer"
                 onClick={EditComment}
               >
                 UPDATE
@@ -355,7 +379,7 @@ const Comment = ({
             : "hidden"
         }
       >
-        <div className="flex flex-col w-[80%] px-5 py-5 justify-center items-center gap-5 bg-white">
+        <div className="flex flex-col w-[80%] px-5 py-5 justify-center items-center gap-5 bg-white lg:w-[40%] rounded-lg">
           <h3 className="text-2xl font-bold tracking-widest">Delete Comment</h3>
           <p>
             Are you sure you want to delete this comment? This will remove the
@@ -364,13 +388,13 @@ const Comment = ({
 
           <div className="flex justify-center items-center gap-5">
             <button
-              className="px-5 py-2 text-white bg-slate-400 font-bold tracking-widest rounded-lg"
+              className="px-5 py-2 text-white bg-slate-400 font-bold tracking-widest rounded-lg cursor-pointer"
               onClick={HandleCancelDelete}
             >
               CANCEL
             </button>
             <button
-              className="px-5 py-2 text-white bg-red-400 font-bold tracking-widest rounded-lg"
+              className="px-5 py-2 text-white bg-red-400 font-bold tracking-widest rounded-lg cursor-pointer"
               onClick={HandleDeleteComment}
             >
               DELETE
