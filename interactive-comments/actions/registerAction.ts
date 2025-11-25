@@ -11,7 +11,7 @@ export async function registerUser(data: LoginRegisterScheme) {
 
     if(!validated.success){
         return {
-            error: validated.error.format()
+            error: validated.error.format().toString()
         }
     }
 

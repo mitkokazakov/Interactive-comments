@@ -13,6 +13,7 @@ import VoteMinus from "@/actions/voteMinus";
 import FindVoteById from "@/actions/findVoteById";
 import { FindVoteType } from "@/actions/findVoteType";
 import toast from "react-hot-toast";
+import { log } from "console";
 
 const Comment = ({
   parentId,
@@ -20,12 +21,14 @@ const Comment = ({
   likes,
   content,
   currentUserId,
+  isReply,
 }: {
   parentId: string;
   id: string;
   likes: number;
   content: string;
   currentUserId: string;
+  isReply?: boolean;
 }) => {
   const [replyClicked, setReply] = useState(false);
   const [replyText, setReplyText] = useState("");
@@ -37,11 +40,16 @@ const Comment = ({
     commentDate: "",
     username: "",
   });
-  const [contentParts, setContentParts] = useState({firstPart: "", restPart: ""});
+  const [contentParts, setContentParts] = useState({
+    firstPart: "",
+    restPart: "",
+  });
 
-  const [userImageForReply,setUserImageForReply] = useState<string>("/images/unknown.png")
+  const [userImageForReply, setUserImageForReply] = useState<string>(
+    "/images/unknown.png"
+  );
 
-  const [voteType,setVoteType] = useState<string>('')
+  const [voteType, setVoteType] = useState<string>("");
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
@@ -49,27 +57,30 @@ const Comment = ({
 
   const userId = session?.user?.id as string;
 
-  async function DetermineContentParts(){
-
+  async function DetermineContentParts() {
     const firstPart = content.split(" ")[0];
     const restPart = content.split(" ").slice(1).join(" ");
 
     setContentParts({
-      firstPart:firstPart,
-      restPart:restPart
-    })
+      firstPart: firstPart,
+      restPart: restPart,
+    });
   }
 
-  async function SetReplyUserImage(){
-    const currentUser = await FindUserById(userId)
+  async function SetReplyUserImage() {
+    const currentUser = await FindUserById(userId);
 
-    setUserImageForReply(currentUser?.image != null ? `/uploads/${currentUser.image}` : "/images/unknown.png")
+    setUserImageForReply(
+      currentUser?.image != null
+        ? `/uploads/${currentUser.image}`
+        : "/images/unknown.png"
+    );
   }
 
-  async function HandleVoteType(){
-     const currentVoteType = await FindVoteType(id, userId)
+  async function HandleVoteType() {
+    const currentVoteType = await FindVoteType(id, userId);
 
-     setVoteType(currentVoteType)
+    setVoteType(currentVoteType);
   }
 
   function HandleDeleteButton() {
@@ -153,8 +164,11 @@ const Comment = ({
   async function HandleVotePlus() {
     const vote = await FindVoteById(id);
 
-    if(vote?.type == "PLUS" && vote.userId == userId){
-      return
+    console.log(vote);
+    
+
+    if (vote?.type == "PLUS" && vote.userId == userId) {
+      return;
     }
     await VotePlus(id, userId);
 
@@ -168,9 +182,8 @@ const Comment = ({
   async function HandleVoteMinus() {
     const vote = await FindVoteById(id);
 
-
-    if(vote?.type == "MINUS" && vote.userId == userId){
-      return
+    if (vote?.type == "MINUS" && vote.userId == userId) {
+      return;
     }
 
     await VoteMinus(id, userId);
@@ -210,7 +223,6 @@ const Comment = ({
 
   console.log("User Id", userId);
   console.log("Comment User Id", currentUserId);
-  
 
   return (
     <div className="w-full flex flex-col">
@@ -233,8 +245,12 @@ const Comment = ({
 
         <div>
           <p className={editClicked == true ? "hidden" : "text-slate-600"}>
-            <span className="text-violet-700 font-bold tracking-widest">{contentParts.firstPart}</span>
-            {contentParts.restPart != "" ? <span> {contentParts.restPart}</span> : null}
+            <span className={isReply === true ? "text-violet-700 font-bold tracking-widest" : ""}>
+              {contentParts.firstPart}
+            </span>
+            {contentParts.restPart != "" ? (
+              <span> {contentParts.restPart}</span>
+            ) : null}
           </p>
 
           <div className={editClicked == true ? "" : "hidden"}>
@@ -266,14 +282,22 @@ const Comment = ({
         <div className="flex justify-between items-center">
           <div className="bg-slate-100 rounded-lg flex justify-center items-center gap-5 px-2 py-1">
             <p
-              className={`font-bold text-2xl text-slate-300 cursor-pointer ${userId == null || voteType == 'PLUS' ? 'pointer-events-none' : 'pointer-events-auto'}`}
+              className={`font-bold text-2xl text-slate-300 cursor-pointer ${
+                userId == null || voteType == "PLUS"
+                  ? "pointer-events-none"
+                  : "pointer-events-auto"
+              }`}
               onClick={HandleVotePlus}
             >
               +
             </p>
             <p className="font-bold text-blue-400">{likes}</p>
             <p
-              className={`font-bold text-2xl text-slate-300 cursor-pointer ${userId == null || voteType == 'MINUS' ? 'pointer-events-none' : 'pointer-events-auto'}`}
+              className={`font-bold text-2xl text-slate-300 cursor-pointer ${
+                userId == null || voteType == "MINUS"
+                  ? "pointer-events-none"
+                  : "pointer-events-auto"
+              }`}
               onClick={HandleVoteMinus}
             >
               -
@@ -282,7 +306,11 @@ const Comment = ({
 
           <div className="flex justify-center items-center">
             <div
-              className={userId == currentUserId ? "flex justify-center items-center gap-2 cursor-pointer" : "hidden"}
+              className={
+                userId == currentUserId
+                  ? "flex justify-center items-center gap-2 cursor-pointer"
+                  : "hidden"
+              }
               onClick={Edit}
             >
               <Image
@@ -291,10 +319,18 @@ const Comment = ({
                 height={14}
                 alt="Reply"
               ></Image>
-              <p className="font-bold text-lg text-violet-500 tracking-widest">Edit</p>
+              <p className="font-bold text-lg text-violet-500 tracking-widest">
+                Edit
+              </p>
             </div>
 
-            <div className={userId == currentUserId ? "flex justify-center items-center gap-2 cursor-pointer ml-8" : "hidden"}>
+            <div
+              className={
+                userId == currentUserId
+                  ? "flex justify-center items-center gap-2 cursor-pointer ml-8"
+                  : "hidden"
+              }
+            >
               <Image
                 src={"/images/icon-delete.svg"}
                 width={14}
@@ -323,7 +359,9 @@ const Comment = ({
                 height={14}
                 alt="Reply"
               ></Image>
-              <p className="font-bold text-lg text-violet-500 tracking-widest">Reply</p>
+              <p className="font-bold text-lg text-violet-500 tracking-widest">
+                Reply
+              </p>
             </div>
           </div>
         </div>

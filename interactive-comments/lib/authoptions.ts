@@ -31,7 +31,7 @@ export const authOptions: AuthOptions = {
         });
 
         if (!user || !user?.hashedPassword) {
-          throw new Error("There is now user with this email.Sorry!");
+          throw new Error("There is no user with this email. Sorry!");
         }
 
         //Check if the passwords matched
