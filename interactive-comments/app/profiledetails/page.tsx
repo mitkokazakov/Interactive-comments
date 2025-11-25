@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import FindUserById from "@/actions/findUserById";
 
-const page = () => {
+const ProfileDetails = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
 
@@ -13,7 +13,7 @@ const page = () => {
     userImage: '/public/unknown.png'
   })
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const userId = session?.user?.id as string;
 
@@ -66,7 +66,7 @@ const page = () => {
 
   useEffect(() => {
     HandleUserEmailAndImage(userId)
-  },[])
+  })
 
   return (
     <div className="h-screen bg-white">
@@ -110,11 +110,12 @@ const page = () => {
               <div className="w-full mt-3">
                 {/* <Image src={'/images/random.png'} height={100} width={100} alt='Profile' className='w-full h-full'></Image> */}
                 {preview && (
-                  <img
-                    src={preview as string}
-                    alt="preview"
-                    className="w-full h-full"
-                  />
+                  // <img
+                  //   src={preview as string}
+                  //   alt="preview"
+                  //   className="w-full h-full"
+                  // />
+                  <Image src={preview as string} width={50} height={50} alt="preview" className="w-full h-full" />
                 )}
               </div>
               <button className="bg-violet-300 px-3 py-2 rounded-lg cursor-pointer tracking-widest hover:bg-violet-400">
@@ -128,4 +129,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProfileDetails;

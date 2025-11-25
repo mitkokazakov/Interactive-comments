@@ -3,7 +3,6 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { CreateReply } from "@/actions/postReply";
-import { FindUser } from "@/lib/services";
 import { EditCommentOrReply } from "@/actions/editComment";
 import DeleteComment from "@/actions/deleteComment";
 import FindUserById from "@/actions/findUserById";
@@ -13,7 +12,6 @@ import VoteMinus from "@/actions/voteMinus";
 import FindVoteById from "@/actions/findVoteById";
 import { FindVoteType } from "@/actions/findVoteType";
 import toast from "react-hot-toast";
-import { log } from "console";
 
 const Comment = ({
   parentId,
@@ -53,7 +51,7 @@ const Comment = ({
 
   const replyBoxRef = useRef<HTMLDivElement>(null);
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const userId = session?.user?.id as string;
 
@@ -421,7 +419,7 @@ const Comment = ({
           <h3 className="text-2xl font-bold tracking-widest">Delete Comment</h3>
           <p>
             Are you sure you want to delete this comment? This will remove the
-            comment and can't be undone.
+            comment and cant be undone.
           </p>
 
           <div className="flex justify-center items-center gap-5">

@@ -9,8 +9,6 @@ const CommentWrapper = async ({parentId}: {parentId: string}) => {
   const currentComment = await GetCommentById(parentId)
 
   const content = currentComment?.content as string
-  const username = currentComment?.userId as string
-  const date = currentComment?.createdAt
   const userId = currentComment?.userId as string
   const likes = currentComment?.likes as number
   const isReply = currentComment?.isReply as boolean

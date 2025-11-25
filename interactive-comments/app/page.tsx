@@ -1,11 +1,9 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authoptions";
+
 import CommentWrapper from "@/components/CommentWrapper";
 import AddComment from "@/components/AddComment";
 import { GetAllComments } from "@/lib/services";
 
 export default async function Home() {
-  const session = await getServerSession(authOptions);
 
   const allComments = await GetAllComments()
 

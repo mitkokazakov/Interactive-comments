@@ -45,6 +45,9 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
         }
       });
 
+      console.log(res);
+      
+
       // if(res?.error){
       //   //alert(res.error)
       //   toast.error(res.error)
@@ -78,6 +81,9 @@ const LoginForm = ({ formtype }: { formtype: string }) => {
       });
     }
   };
+
+  console.log(isPending);
+  
 
   return (
     <div className="flex flex-col w-full mt-8">

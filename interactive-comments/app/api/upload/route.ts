@@ -44,5 +44,8 @@ export async function POST(req: NextRequest) {
     }
   })
 
+  console.log(changedUserImage);
+  
+
   return NextResponse.json({ success: true, path: `/uploads/${filename}` })
 }
