@@ -224,7 +224,7 @@ const Comment = ({
 
   return (
     <div className="w-full flex flex-col">
-      <div className="w-full flex flex-col gap-5 bg-white rounded-lg p-4">
+      <div className="w-full flex flex-col gap-5 bg-white rounded-lg p-4 relative">
         <div className="flex gap-4 items-center">
           <div className="w-8 h-8">
             <Image
